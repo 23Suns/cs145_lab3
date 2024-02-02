@@ -1,19 +1,20 @@
-import java.util.Arrays;
 import java.lang.String;
 import java.lang.Character;
 
 public class LetterInventory {
     
+    private String originalWord = "";
     private int[] letterCounts; // array to hold count of letters
     private int totalLetters; // total number of letters across all counts
     private static final int NUM_LETTERS = 26; // number of letters constant
 
     // constructor
     public LetterInventory(String data) {
+        originalWord = data;
         letterCounts = new int[NUM_LETTERS];
         totalLetters = 0;
 
-        for (int i = 0; i < data.length; i++) {
+        for (int i = 0; i < data.length(); i++) {
             char letter = Character.toLowerCase(data.charAt(i));
             if (letter >= 'a' && letter <= 'z') {
                 int index = letter - 'a';
@@ -21,6 +22,10 @@ public class LetterInventory {
                 totalLetters++;
             }
         }
+    }
+
+    public String getOriginalWord() {
+        return "[ " + originalWord + " ]";
     }
 
     // Get count for a given letter
@@ -43,15 +48,15 @@ public class LetterInventory {
     }
 
     public String toString() {
-        String result = "[";
-
+        String result = "[ ";
         for (int i = 0; i < NUM_LETTERS; i++) {
             char letter = (char)('a' + i);
             for (int j = 0; j < letterCounts[i]; j++) {
                 result += letter;
                 if (j < letterCounts[i] - 1) {
-                    result += ", ";
+                    result += ",";
                 }
+                result += " ";
             }
         }
         result += "]";
@@ -59,10 +64,29 @@ public class LetterInventory {
     }
 
     public LetterInventory add(LetterInventory other) {
+        LetterInventory sum = new LetterInventory("");
 
+        for (int i = 0; i < NUM_LETTERS; i++) {
+            sum.letterCounts[i] = this.letterCounts[i] + other.letterCounts[i];
+        }
+        sum.totalLetters = this.totalLetters + other.totalLetters;
+
+        return sum;
     }
 
     public LetterInventory subtract(LetterInventory other) {
-
+        
+        LetterInventory diff = new LetterInventory("");
+        
+        for(int i=0; i<NUM_LETTERS; i++) {
+            int count = this.letterCounts[i] - other.letterCounts[i];
+            if(count < 0) {
+                return null; // negative count found
+            }
+            diff.letterCounts[i] = count; 
+        }
+        diff.totalLetters = this.totalLetters - other.totalLetters;
+        
+        return diff;
     }
 }
